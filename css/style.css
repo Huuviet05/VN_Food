@@ -264,7 +264,6 @@ section {
 
 .header .flex .navbar a:hover {
 	color: #ffe6d8;
-	text-decoration: underline;
 }
 
 .header .flex .icons > * {
@@ -1258,14 +1257,14 @@ footer .bottom-details .bottom-text a:hover {
 	}
 }
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 	#menu-btn {
 		display: inline-block;
 	}
 
 	.header .flex .navbar {
 		position: absolute;
-		top: 99%;
+		top: 115%;
 		left: 0;
 		right: 0;
 		border-top: var(--border);
@@ -1282,6 +1281,23 @@ footer .bottom-details .bottom-text a:hover {
 
 	.header .flex .navbar.active {
 		clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+	}
+
+	.header .flex .navbar a {
+		color: #333; /* Đổi màu chữ thành xám đậm */
+	}
+
+	.header .flex .navbar a:hover {
+		color: #ff7e5f !important;
+		background: #ffe6d8;
+	}
+
+	.header .flex .navbar a.active {
+		color: #ff7e5f !important; /* Màu cam nổi bật hơn */
+	}
+
+	.header .flex .navbar a::before {
+		background: #ff7e5f; /* Đổi màu gạch chân khi responsive */
 	}
 }
 

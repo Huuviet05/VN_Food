@@ -27,7 +27,7 @@ if (isset($_GET['order_id'])) {
         // Nội dung hóa đơn được thiết kế
         $html = '
         <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
-            <h1 style="text-align: center; color: #4CAF50;">VN-Food</h1>
+            <h1 style="text-align: center; color: #ff7e5f;">VN-Food</h1>
             <p style="text-align: center;">Hóa Đơn Thanh Toán</p>
             <hr>
             <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">

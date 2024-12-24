@@ -26,12 +26,13 @@ if (isset($_GET['delete'])) {
 }
 
 // Phân trang
-$orders_per_page = 6; // Số đơn hàng trên mỗi trang
+$orders_per_page = 5; // Số đơn hàng trên mỗi trang
 $page = isset($_GET['page']) ? (int)$_GET['page'] : 1; // Trang hiện tại
 $start_from = ($page - 1) * $orders_per_page; // Vị trí bắt đầu truy vấn
 
 // Truy vấn đơn hàng cho trang hiện tại
-$select_orders = $conn->prepare("SELECT * FROM `orders` LIMIT ?, ?");
+// $select_orders = $conn->prepare("SELECT * FROM `orders` LIMIT ?, ?");
+$select_orders = $conn->prepare("SELECT * FROM `orders` ORDER BY `id` DESC LIMIT ?, ?");
 $select_orders->bindParam(1, $start_from, PDO::PARAM_INT);
 $select_orders->bindParam(2, $orders_per_page, PDO::PARAM_INT);
 $select_orders->execute();

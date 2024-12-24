@@ -27,7 +27,6 @@ function fadeOut() {
 
 window.onload = fadeOut;
 
-
 document.querySelectorAll('input[type="number"]').forEach((numberInput) => {
 	numberInput.oninput = () => {
 		if (numberInput.value.length > numberInput.maxLength)

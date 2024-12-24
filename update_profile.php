@@ -100,7 +100,7 @@ if (isset($_POST['submit'])) {
     <?php include 'components/user_header.php'; ?>
     <!-- header section ends -->
 
-    <section class="form-container update-form">
+    <section class="form-container update-form" style="margin-top: 100px;">
 
         <form action="" method="post">
             <h3>cập nhật hồ sơ</h3>

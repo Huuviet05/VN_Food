@@ -175,6 +175,15 @@ $total_pages = ceil($total_users / $users_per_page); // Tổng số trang
         font-family: 'Arial', sans-serif;
         text-transform: uppercase;
     }
+
+    .user-avatar {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
     </style>
 
 </head>
@@ -195,6 +204,7 @@ $total_pages = ceil($total_users / $users_per_page); // Tổng số trang
                     <th>Email</th>
                     <th>Số điện thoại</th>
                     <th>Địa chỉ</th>
+                    <th>Ảnh đại diện</th>
                     <th style="width: 50px;">Hành động</th>
                 </tr>
             </thead>
@@ -210,6 +220,9 @@ $total_pages = ceil($total_users / $users_per_page); // Tổng số trang
                     <td><?= $fetch_accounts['email']; ?></td>
                     <td><?= $fetch_accounts['phoneNumber']; ?></td>
                     <td><?= $fetch_accounts['address']; ?></td>
+                    <td>
+                        <img src="../uploaded_img/<?= $fetch_accounts['avatar']; ?>" alt="Avatar" class="user-avatar">
+                    </td>
                     <td class="actions">
                         <a href="users_accounts.php?delete=<?= $fetch_accounts['userID']; ?>" class="delete-btn"
                             onclick="return confirm('Bạn có chắc chắn muốn xóa tài khoản này không?');"><i

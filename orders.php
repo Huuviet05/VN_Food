@@ -1,5 +1,10 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require_once 'vendor/autoload.php'; // Import thư viện Google API Client
+
 include 'components/connect.php';
 
 session_start();
@@ -14,9 +19,123 @@ if (isset($_SESSION['user_id'])) {
 // Xử lý khi người dùng nhấn nút "Đã nhận hàng"
 if (isset($_POST['confirm_received'])) {
    $order_id = $_POST['order_id'];
-   $update_status = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
-   $update_status->execute(['đã giao hàng', $order_id]);
-   $message[] = 'Chúc mừng bạn đã nhận đơn hàng thành công .';
+
+   // Kiểm tra đơn hàng thuộc về khách hàng hiện tại
+   $check_order = $conn->prepare("SELECT * FROM `orders` WHERE id = ? AND userID = ?");
+   $check_order->execute([$order_id, $user_id]);
+
+   if ($check_order->rowCount() > 0) {
+      $order = $check_order->fetch(PDO::FETCH_ASSOC);
+
+      // Cập nhật trạng thái đơn hàng
+      $update_status = $conn->prepare("UPDATE `orders` SET payment_status = ? WHERE id = ?");
+      $update_status->execute(['đã giao hàng', $order_id]);
+
+      // Tạo hóa đơn PDF bằng mPDF
+      $mpdf = new \Mpdf\Mpdf();
+      $html = '
+      <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd;">
+          <h1 style="text-align: center; color: #ff7e5f;">VN-Food</h1>
+          <p style="text-align: center;">Hóa Đơn Thanh Toán</p>
+          <hr>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>ID Khách Hàng</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['userID'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Ngày Đặt Hàng</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['placed_on'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Tên</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['name'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Email</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['email'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Số Điện Thoại</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['phoneNumber'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Địa Chỉ</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['address'] . '</td>
+              </tr>
+          </table>
+
+          <h3 style="text-align: left;">Chi Tiết Đơn Hàng</h3>
+          <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Tên Sản Phẩm</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['total_products'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Tổng Tiền</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['total_price'] . 'k</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Phương Thức Thanh Toán</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['method'] . '</td>
+              </tr>
+              <tr>
+                  <td style="padding: 8px; border: 1px solid #ddd;"><strong>Trạng Thái Thanh Toán</strong></td>
+                  <td style="padding: 8px; border: 1px solid #ddd;">' . $order['payment_status'] . '</td>
+              </tr>
+          </table>
+          <p style="text-align: center; font-size: 14px; color: #666;">Cảm ơn bạn đã đặt hàng tại VN-Food!</p>
+      </div>
+      ';
+
+      $mpdf->WriteHTML($html);
+      $pdf_file = 'invoice_' . $order_id . '.pdf';
+      $mpdf->Output($pdf_file, 'F'); // Lưu file PDF vào server
+
+      // Gửi email với tệp đính kèm
+      $mail = new PHPMailer(true);
+
+      try {
+         // Cấu hình SMTP
+         $mail->isSMTP();
+         $mail->Host = 'smtp.gmail.com';  // Sử dụng Gmail SMTP
+         $mail->SMTPAuth = true;
+         $mail->Username = 'huuviet19905@gmail.com';  // Địa chỉ email của bạn
+         $mail->Password = 'vhabuiyfyxenxqqx';  // Mật khẩu email của bạn
+         $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+         $mail->Port = 587;
+
+         // Thông tin người gửi và người nhận
+         $mail->setFrom('huuviet19905@gmail.com', 'VN-Food');
+         $mail->addAddress($order['email'], $order['name']);
+
+         // Cấu hình charset và mã hóa cho subject và body
+         $mail->CharSet = 'UTF-8'; // Đặt mã hóa UTF-8
+
+         // Tệp đính kèm
+         $mail->addAttachment($pdf_file);
+
+         // Nội dung email
+         $mail->isHTML(true);
+         $mail->Subject = 'Cảm ơn bạn đã đặt hàng tại VN-Food';
+         $mail->Body    = '<p>Xin chào ' . htmlspecialchars($order['name']) . ',</p>
+                           <p>Cảm ơn bạn đã đặt hàng tại VN-Food. Vui lòng kiểm tra hóa đơn đính kèm.</p>
+                           <p>Trân trọng,<br>VN-Food</p>';
+
+         $mail->send();
+
+         $message[] = 'Kiểm tra hóa đơn ở email của bạn!';
+      } catch (Exception $e) {
+         $message[] = 'Không thể gửi email. Lỗi: ' . $mail->ErrorInfo;
+      }
+
+      // Xóa file PDF sau khi gửi
+      if (file_exists($pdf_file)) {
+         unlink($pdf_file);
+      }
+   } else {
+      $message[] = 'Đơn hàng không tồn tại hoặc không thuộc về bạn!';
+   }
 }
 
 ?>
@@ -84,7 +203,8 @@ if (isset($_POST['confirm_received'])) {
          if ($user_id == '') {
             echo '<p class="empty">vui lòng đăng nhập để xem đơn hàng của bạn</p>';
          } else {
-            $select_orders = $conn->prepare("SELECT * FROM `orders` WHERE userID = ?");
+            $select_orders = $conn->prepare("SELECT * FROM `orders` WHERE userID = ? ORDER BY `id` DESC");
+
             $select_orders->execute([$user_id]);
             if ($select_orders->rowCount() > 0) {
                while ($fetch_orders = $select_orders->fetch(PDO::FETCH_ASSOC)) {

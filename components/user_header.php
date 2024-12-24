@@ -48,37 +48,47 @@ if (isset($message)) {
 
     .navbar a {
         font-size: 16px;
-        /* Tăng kích thước chữ */
         font-weight: 400;
-        /* Đậm vừa đủ */
         color: white;
         margin: 0 12px;
         text-transform: capitalize;
         text-decoration: none;
         letter-spacing: 0.5px;
-        /* Giãn nhẹ ký tự */
-        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .navbar a::before {
+        content: "";
+        position: absolute;
+        bottom: -3px;
+        left: 50%;
+        width: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #ffe6d8, #ffff);
+        transition: 0.4s ease;
+        transform: translateX(-50%);
+    }
+
+    .navbar a:hover::before {
+        width: 100%;
     }
 
     .navbar a:hover {
         color: #ffe6d8;
     }
 
-    .navbar a::after {
-        content: '';
-        position: absolute;
-        left: 50%;
-        bottom: -5px;
-        transform: translateX(-50%);
-        width: 0;
-        height: 2px;
-        background-color: white;
-        transition: width 0.3s ease;
+    /* Active link styling */
+    .navbar a.active {
+        color: #ffff !important;
+        /* Đảm bảo màu trắng được áp dụng */
     }
 
-    /* .navbar a:hover::after {
-    width: 100%;
-} */
+    .navbar a.active::before {
+        width: 100%;
+        /* Show underline for active link */
+    }
+
 
     .icons a {
         color: white;
@@ -122,9 +132,10 @@ if (isset($message)) {
             <a href="home.php">Trang chủ</a>
             <a href="about.php">Giới thiệu</a>
             <a href="menu.php">Thực đơn</a>
-            <a href="orders.php">Đơn đặt hàng</a>
+            <a href="orders.php">Đơn hàng</a>
             <a href="contact.php">Liên hệ</a>
         </nav>
+
 
         <div class="icons">
             <?php
@@ -150,7 +161,7 @@ if (isset($message)) {
                     style="width: 27px; height: 27px; border-radius: 50%; object-fit: cover;">
             </div>
 
-            <div id="menu-btn" class="fas fa-bars"></div>
+            <div id="menu-btn" class="fas fa-bars" style="color: black;"></div>
         </div>
 
         <div class="profile">
@@ -183,3 +194,19 @@ if (isset($message)) {
     </section>
 
 </header>
+
+<script>
+// Lấy URL đầy đủ hiện tại
+const currentUrl = window.location.href;
+
+// Lấy tất cả các link trong navbar
+const navLinks = document.querySelectorAll('.navbar a');
+
+// Lặp qua các link và kiểm tra URL của từng link
+navLinks.forEach((link) => {
+    // So sánh phần cuối của URL hiện tại với href của link
+    if (currentUrl.includes(link.getAttribute('href'))) {
+        link.classList.add('active'); // Thêm class "active" nếu URL khớp
+    }
+});
+</script>

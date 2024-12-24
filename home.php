@@ -124,101 +124,101 @@ include 'components/add_cart.php';
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Danh Mục</title>
         <style>
-            /* Container Styling */
-            .box-container-cate {
-                display: flex;
-                flex-wrap: wrap;
-                /* Cho phép các hộp xuống dòng */
-                gap: 5px;
-                /* Khoảng cách giữa các hộp */
-                justify-content: space-evenly;
-                /* Căn đều các hộp, kể cả khoảng trống */
-                padding: 5px;
-                /* Thêm khoảng cách giữa container và các cạnh màn hình */
-                box-sizing: border-box;
-                /* Đảm bảo padding không làm thay đổi kích thước */
-            }
+        /* Container Styling */
+        .box-container-cate {
+            display: flex;
+            flex-wrap: wrap;
+            /* Cho phép các hộp xuống dòng */
+            gap: 5px;
+            /* Khoảng cách giữa các hộp */
+            justify-content: space-evenly;
+            /* Căn đều các hộp, kể cả khoảng trống */
+            padding: 5px;
+            /* Thêm khoảng cách giữa container và các cạnh màn hình */
+            box-sizing: border-box;
+            /* Đảm bảo padding không làm thay đổi kích thước */
+        }
 
-            /* Individual Box Styling */
-            .box-show {
-                position: relative;
-                width: 280px;
-                height: 200px;
-                border-radius: 8px;
-                overflow: hidden;
-                text-decoration: none;
-                color: white;
-                transition: transform 0.3s ease-in-out;
-                background: #f3f3f3;
-            }
+        /* Individual Box Styling */
+        .box-show {
+            position: relative;
+            width: 280px;
+            height: 200px;
+            border-radius: 8px;
+            overflow: hidden;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s ease-in-out;
+            background: #f3f3f3;
+        }
 
-            .box-show img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-                transition: 0.5s ease-in-out;
-            }
+        .box-show img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: 0.5s ease-in-out;
+        }
 
-            .box-show .info {
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                color: white;
-                text-align: center;
-                padding: 10px;
-                font-size: 18px;
-                font-weight: bold;
-                transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
-                z-index: 1;
-            }
+        .box-show .info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            z-index: 1;
+        }
 
-            .box-show .overlay {
-                position: absolute;
-                bottom: -60px;
-                /* Ban đầu ở ngoài khung */
-                left: 0;
-                right: 0;
-                background: rgba(0, 0, 0, 0.7);
-                color: white;
-                text-align: center;
-                padding: 10px;
-                font-size: 18px;
-                font-weight: bold;
-                transition: 0.5s ease-in-out;
-                z-index: 2;
-                opacity: 0;
-            }
+        .box-show .overlay {
+            position: absolute;
+            bottom: -60px;
+            /* Ban đầu ở ngoài khung */
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-size: 18px;
+            font-weight: bold;
+            transition: 0.5s ease-in-out;
+            z-index: 2;
+            opacity: 0;
+        }
 
-            /* Hover Effects */
-            .box-show:hover {
-                transform: scale(1.05);
-            }
+        /* Hover Effects */
+        .box-show:hover {
+            transform: scale(1.05);
+        }
 
-            .box-show:hover img {
-                filter: brightness(0.8);
-            }
+        .box-show:hover img {
+            filter: brightness(0.8);
+        }
 
-            .box-show:hover .info {
-                opacity: 0;
-                transform: translateY(-20px);
-                /* Đẩy nội dung lên trên khi ẩn */
-            }
+        .box-show:hover .info {
+            opacity: 0;
+            transform: translateY(-20px);
+            /* Đẩy nội dung lên trên khi ẩn */
+        }
 
-            .box-show:hover .overlay {
-                bottom: 0;
-                /* Hiện overlay lên khi hover */
-                opacity: 1;
-            }
+        .box-show:hover .overlay {
+            bottom: 0;
+            /* Hiện overlay lên khi hover */
+            opacity: 1;
+        }
 
-            /* Section Title Styling */
-            .category .title {
-                text-align: center;
-                font-size: 28px;
-                margin-bottom: 20px;
-                color: #333;
-            }
+        /* Section Title Styling */
+        .category .title {
+            text-align: center;
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #333;
+        }
         </style>
     </head>
 
@@ -272,22 +272,22 @@ include 'components/add_cart.php';
             if ($select_products->rowCount() > 0) {
                 while ($fetch_products = $select_products->fetch(PDO::FETCH_ASSOC)) {
             ?>
-                    <form action="" method="post" class="box">
-                        <input type="hidden" name="pid" value="<?= $fetch_products['productID']; ?>">
-                        <input type="hidden" name="name" value="<?= $fetch_products['productName']; ?>">
-                        <input type="hidden" name="price" value="<?= $fetch_products['price']; ?>">
-                        <input type="hidden" name="image" value="<?= $fetch_products['image']; ?>">
-                        <a href="quick_view.php?pid=<?= $fetch_products['productID']; ?>" class="fas fa-eye"></a>
-                        <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
-                        <img src="uploaded_img/<?= $fetch_products['image']; ?>" alt="">
-                        <a href="category.php?category=<?= $fetch_products['category']; ?>"
-                            class="cat"><?= $fetch_products['category']; ?></a>
-                        <div class="name"><?= $fetch_products['productName']; ?></div>
-                        <div class="flex">
-                            <div class="price"><?= $fetch_products['price']; ?>k</div>
-                            <input type="number" name="qty" class="qty" min="1" max="99" value="1" maxlength="2">
-                        </div>
-                    </form>
+            <form action="" method="post" class="box">
+                <input type="hidden" name="pid" value="<?= $fetch_products['productID']; ?>">
+                <input type="hidden" name="name" value="<?= $fetch_products['productName']; ?>">
+                <input type="hidden" name="price" value="<?= $fetch_products['price']; ?>">
+                <input type="hidden" name="image" value="<?= $fetch_products['image']; ?>">
+                <a href="quick_view.php?pid=<?= $fetch_products['productID']; ?>" class="fas fa-eye"></a>
+                <button type="submit" class="fas fa-shopping-cart" name="add_to_cart"></button>
+                <img src="uploaded_img/<?= $fetch_products['image']; ?>" alt="">
+                <a href="category.php?category=<?= $fetch_products['category']; ?>"
+                    class="cat"><?= $fetch_products['category']; ?></a>
+                <div class="name"><?= $fetch_products['productName']; ?></div>
+                <div class="flex">
+                    <div class="price"><?= $fetch_products['price']; ?>k</div>
+                    <input type="number" name="qty" class="qty" min="1" max="99" value="1" maxlength="2">
+                </div>
+            </form>
             <?php
                 }
             } else {
@@ -302,6 +302,13 @@ include 'components/add_cart.php';
         </div>
 
     </section>
+
+    <!-- Facebook Comments Plugin -->
+    <div class="fb-comments" data-href="http://yourdom.com/about.php" data-width="100%" data-numposts="100"
+        data-colorscheme="light"></div>
+
+    <!-- Load Facebook SDK for JavaScript -->
+    <div id="fb-root"></div>
 
     <div id="vnfood-loader-container">
         <div class="vnfood-loader">VNFood</div>
@@ -318,21 +325,42 @@ include 'components/add_cart.php';
     <script src="js/script.js"></script>
 
     <script>
-        var swiper = new Swiper(".hero-slider", {
-            loop: true,
-            grabCursor: true,
-            effect: "flip",
-            pagination: {
-                el: ".swiper-pagination",
-                clickable: true,
-            },
+    window.fbAsyncInit = function() {
+        FB.init({
+            appId: '1818848021950170',
+            xfbml: true,
+            version: 'v20.0',
         });
-        document.addEventListener('DOMContentLoaded', () => {
-            const loaderContainer = document.getElementById('vnfood-loader-container');
-            setTimeout(() => {
-                loaderContainer.style.display = 'none'; // Ẩn loader sau 2.5 giây
-            }, 2500); // Thời gian khớp với animation (2.5s)
-        });
+    };
+
+    (function(d, s, id) {
+        var js,
+            fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) {
+            return;
+        }
+        js = d.createElement(s);
+        js.id = id;
+        js.src = 'https://connect.facebook.net/vi_VN/sdk.js';
+        fjs.parentNode.insertBefore(js, fjs);
+    })(document, 'script', 'facebook-jssdk');
+
+
+    var swiper = new Swiper(".hero-slider", {
+        loop: true,
+        grabCursor: true,
+        effect: "flip",
+        pagination: {
+            el: ".swiper-pagination",
+            clickable: true,
+        },
+    });
+    document.addEventListener('DOMContentLoaded', () => {
+        const loaderContainer = document.getElementById('vnfood-loader-container');
+        setTimeout(() => {
+            loaderContainer.style.display = 'none'; // Ẩn loader sau 2.5 giây
+        }, 2500); // Thời gian khớp với animation (2.5s)
+    });
     </script>
 
 </body>

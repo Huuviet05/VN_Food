@@ -101,6 +101,7 @@ section {
 	gap: 1rem;
 }
 
+
 .message {
 	position: fixed; /* Sử dụng fixed để cố định vị trí trên màn hình */
 	top: 150px; /* Cách phía trên 150px */
