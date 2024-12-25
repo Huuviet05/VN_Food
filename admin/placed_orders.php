@@ -273,7 +273,7 @@ $total_pages = ceil($total_orders / $orders_per_page); // Tính tổng số tran
                 <th>Chi tiết đơn hàng</th>
                 <th>Giá đơn</th>
                 <th>Phương thức thanh toán</th>
-                <th>Trạng thái thanh toán</th>
+                <th>Trạng thái đơn hàng</th>
                 <th>Hành động</th>
             </tr>
         </thead>

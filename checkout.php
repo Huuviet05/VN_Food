@@ -41,6 +41,36 @@ if (isset($_POST['submit'])) {
                 $total_price =  htmlspecialchars($_POST['total_price_coupon'], ENT_QUOTES, 'UTF-8');
             }
 
+            if ($method == 'thẻ tín dụng') {
+
+                session_start();
+                // Lưu thông tin đơn hàng vào session
+                $_SESSION['order_data'] = [
+                    'user_id' => $user_id,
+                    'name' => $name,
+                    'number' => $number,
+                    'email' => $email,
+                    'method' => $method,
+                    'address' => $address,
+                    'total_products' => $total_products,
+                    'total_price' => !empty($discount_code) ? htmlspecialchars($_POST['total_price_coupon'], ENT_QUOTES, 'UTF-8') : $total_price,
+                    'payment_status' => 'chờ giao hàng',
+                ];
+
+                $insert_order = $conn->prepare("INSERT INTO `orders`(userID, name, phoneNumber, email, method, address, total_products, total_price, payment_status, placed_on) VALUES(?,?,?,?,?,?,?,?,?,NOW())");
+
+                $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price, 'chờ giao hàng']);
+
+                $delete_cart = $conn->prepare("DELETE FROM `cart` WHERE userID = ?");
+
+                $delete_cart->execute([$user_id]);
+
+                // Chuyển hướng tới trang xử lý VNPay
+                include 'vnpay_payment.php';
+                exit();
+            }
+
+
             $insert_order = $conn->prepare("INSERT INTO `orders`(userID, name, phoneNumber, email, method, address, total_products, total_price, payment_status, placed_on) VALUES(?,?,?,?,?,?,?,?,?,NOW())");
 
             $insert_order->execute([$user_id, $name, $number, $email, $method, $address, $total_products, $total_price, 'chờ giao hàng']);
@@ -73,9 +103,6 @@ if (isset($_POST['submit'])) {
 
     <title>Thanh toán</title>
 
-    xml
-
-    Copy
     <!-- font awesome cdn link  -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 
